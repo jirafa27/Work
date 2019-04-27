@@ -4,7 +4,11 @@ import lesson04.task02.ObjectBox;
 
 import java.util.*;
 
+/**
+ * Метод для работы с числами
+ */
 public class MathBox extends ObjectBox {
+
     @Override
     public void addObject(Object o) {
         try {
@@ -40,6 +44,11 @@ public class MathBox extends ObjectBox {
         set = new LinkedHashSet<>();
         set.addAll(Arrays.asList(arr));
     }
+
+    /**
+     *
+     * @return сумму всех элементов
+     */
     public Number summator()
     {
 
@@ -57,6 +66,11 @@ public class MathBox extends ObjectBox {
 
         return sum;
     }
+
+    /**
+     *
+     * @param value - на что делим все элементы коллекции
+     */
     public void splitter(Number value)
     {
         Set<Object> newSet = new HashSet<>();
@@ -72,17 +86,32 @@ public class MathBox extends ObjectBox {
         set = newSet;
     }
 
+    /**
+     *
+     * @return метод dump родителя
+     */
     @Override
     public String toString() {
         return super.dump();
     }
-
+    /**
+     * Если переданный сет содержит в себе элементы MathBox и MathBox содержит элементы set,
+     * вернуть true, иначе false
+     */
     @Override
     public boolean equals(Object obj) {
-        Set<Object> s = (Set<Object>) obj;
-        return (s.containsAll(set) && set.containsAll(s));
+        try {
+            Set<Object> s = (Set<Object>) obj;
+            return (s.containsAll(set) && set.containsAll(s));
+        }
+        catch (ClassCastException e) {
+            System.out.println("В метод equals был передан не Set<Object>");
+        }
+        return false;
     }
-
+    /**
+     * @return сумму хэш-кодов элементов коллекции
+     */
     @Override
     public int hashCode() {
         int hash = 0;
