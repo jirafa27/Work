@@ -10,6 +10,12 @@ public class Animal {
     int weight;
     static Set<Animal> set = new LinkedHashSet<>();
 
+    /**
+     * Конструктор Animal
+     * @param name кличка
+     * @param owner объект класса Person
+     * @param weight вес живоного
+     */
     public Animal(String name, Person owner, int weight) {
         this.id = count++;
         this.name = name;
@@ -44,6 +50,10 @@ public class Animal {
         return owner+" " + name + " " + weight;
     }
 
+    /**
+     * Если имя, хозяин и вес совпадают, то это одно и то же животное
+     *
+     */
     @Override
     public boolean equals(Object obj) {
         Animal animal = (Animal) obj;
@@ -51,6 +61,12 @@ public class Animal {
             return true;
          return false;
     }
+
+    /**
+     * Добавление нового животного в set.
+     * Отлавливается исключение (такое животное есть в сете)
+     *
+     */
     public void add(Animal animal)
     {
         try {
@@ -71,6 +87,14 @@ public class Animal {
             return null;
 
     }
+
+    /**
+     * Меняет имя, хозяина и вес по id в set
+     * @param id идентификатор
+     * @param name имя
+     * @param owner хозяин
+     * @param weight вес
+     */
     public void change (int id, String name, Person owner, int weight)
     {
         for (Animal animal: set)
@@ -82,6 +106,10 @@ public class Animal {
             }
 
     }
+
+    /**
+     * Сравнивает двух животных: сначала хэш-коды хозяинов, потом имена, затем, вес
+     */
     int compare(Animal animal)
     {
         if (animal.owner.hashCode()>owner.hashCode())
@@ -95,6 +123,10 @@ public class Animal {
         else
             return animal.name.compareTo(name)>0? 1: animal.name.compareTo(name)<0? -1: Integer.compare(animal.weight, weight);
     }
+
+    /**
+     * Сортировка вставками
+     */
     public static void sort()
     {
         Animal[] animals = set.toArray(Animal[]::new);
