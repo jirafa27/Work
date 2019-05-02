@@ -1,6 +1,4 @@
-package part1.lesson05;
-
-import java.util.*;
+package part1.lesson05.task01;
 
 public class Animal implements Comparable<Animal> {
     static int count = 0;
