@@ -1,4 +1,4 @@
-package lesson06.task02;
+package part1.lesson06.task02;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,7 +9,7 @@ import java.util.Random;
 public class Main {
     public static void main(String[] args) throws IOException {
         String[] strings = new String[]{"111", "222"};
-        getFiles("C:/dev/projects/getJavaJob/HomeTasks/src/lesson06/task02/", 10, 400, strings, 2);
+        getFiles("C:/dev/projects/getJavaJob/HomeTasks/src/part1.lesson06/task02/", 10, 400, strings, 2);
     }
     public static void getFiles(String path, int n, int size, String[] words, int probability) throws IOException {
         for (int i=0;i<n; i++)

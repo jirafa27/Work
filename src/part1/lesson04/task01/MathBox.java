@@ -1,6 +1,6 @@
-package lesson04.task01;
+package part1.lesson04.task01;
 
-import lesson04.task02.ObjectBox;
+import part1.lesson04.task02.ObjectBox;
 
 import java.util.*;
 

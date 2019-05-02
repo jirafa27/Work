@@ -1,4 +1,4 @@
-package lesson01.task02;
+package part1.lesson01.task02;
 
 import java.util.Random;
 import java.util.Scanner;

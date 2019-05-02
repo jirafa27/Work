@@ -1,4 +1,4 @@
-package lesson04.task02;
+package part1.lesson04.task02;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
