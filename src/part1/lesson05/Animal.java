@@ -8,6 +8,7 @@ public class Animal {
     String name;
     Person owner;
     int weight;
+    //TODO отделить Animal от картотеки животных
     static Set<Animal> set = new LinkedHashSet<>();
 
     /**
@@ -72,11 +73,13 @@ public class Animal {
         try {
             set.add(animal);
         }
+        //TODO Set.add не выбрасывает исключений при некникальности.
         catch (Exception e)
         {
             System.out.println("Такое животное уже есть в списке");
         }
     }
+    //TODO по заданию поиск должен быть эффективным
     public Animal search (String name)
     {
         for (Animal animal: set)
@@ -110,6 +113,9 @@ public class Animal {
     /**
      * Сравнивает двух животных: сначала хэш-коды хозяинов, потом имена, затем, вес
      */
+    //TODO почему хэш-коды?
+    //TODO лучше определить Comparable интерфейс
+    //TODO использовать Person из первого задания
     int compare(Animal animal)
     {
         if (animal.owner.hashCode()>owner.hashCode())
@@ -127,6 +133,7 @@ public class Animal {
     /**
      * Сортировка вставками
      */
+    //TODO Collections.sort() для Comparable
     public static void sort()
     {
         Animal[] animals = set.toArray(Animal[]::new);
