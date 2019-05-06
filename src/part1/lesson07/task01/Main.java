@@ -7,23 +7,25 @@ import java.util.concurrent.*;
 import static java.lang.Thread.sleep;
 
 public class Main {
-   volatile static Map<Integer, BigInteger> map = new HashMap<>();
-    public static void main(String[] args) throws InterruptedException {
+    static Map<Integer, BigInteger> map = new ConcurrentHashMap<>();
+    public static void main(String[] args) throws InterruptedException, ExecutionException {
         ArrayList<Integer> list = new ArrayList<>();
         Random random = new Random();
         ExecutorService executorService = Executors.newFixedThreadPool(5);
-        for (int i=0;i<1000; i++)
-        {
-            list.add(random.nextInt(1000));
-            executorService.submit(new Task(list.get(i)));
+        List<Task> l = new ArrayList<>();
+        for (int i=0;i<1000; i++) {
+
+            l.add(new Task(random.nextInt(1000)));
         }
-        sleep(1000);
-        for (int i=0;i<1000; i++)
-            System.out.println(list.get(i)+ " " + map.get(list.get(i)));
+        List<Future<String>> m = executorService.invokeAll(l);
+        for (Future f: m)
+        {
+            System.out.println(f.get());
+        }
         executorService.shutdown();
 
     }
-    static class Task implements Callable<BigInteger>
+    static class Task implements Callable<String>
     {
         int n;
 
@@ -32,7 +34,7 @@ public class Main {
         }
 
         @Override
-        public BigInteger call() throws Exception {
+        public String call() throws Exception {
                BigInteger result = BigInteger.ONE;
                for (int i = n; i >= 2; i--) {
                    if (map.containsKey(i)) {
@@ -42,7 +44,7 @@ public class Main {
                    result = result.multiply(BigInteger.valueOf((long) i));
                }
                map.put(n, result);
-               return result;
+               return n+" " + result;
 
         }
     }
