@@ -9,7 +9,6 @@ import static java.lang.Thread.sleep;
 public class Main {
     static Map<Integer, BigInteger> map = new ConcurrentHashMap<>();
     public static void main(String[] args) throws InterruptedException, ExecutionException {
-        ArrayList<Integer> list = new ArrayList<>();
         Random random = new Random();
         ExecutorService executorService = Executors.newFixedThreadPool(5);
         List<Task> l = new ArrayList<>();
