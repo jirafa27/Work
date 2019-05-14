@@ -22,7 +22,6 @@ public class Main {
             System.out.println(f.get());
         }
         executorService.shutdown();
-
     }
     static class Task implements Callable<String>
     {
@@ -33,7 +32,7 @@ public class Main {
         }
 
         @Override
-        public String call() throws Exception {
+        public String call() {
                BigInteger result = BigInteger.ONE;
                for (int i = n; i >= 2; i--) {
                    if (map.containsKey(i)) {
@@ -44,8 +43,6 @@ public class Main {
                }
                map.put(n, result);
                return n+" " + result;
-
         }
     }
-
 }

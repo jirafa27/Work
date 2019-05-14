@@ -12,7 +12,7 @@ public class MathBox extends ObjectBox {
     @Override
     public void addObject(Object o) {
         try {
-            super.addObject((Number) o);
+            super.addObject(o);
         }
         catch (ClassCastException e)
         {

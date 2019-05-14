@@ -24,7 +24,7 @@ public class Main {
         while (fSize>0) {
             int sentenceLength = random.nextInt(15) + 1;
             String sentence = "";
-            StringBuilder sent = new StringBuilder("");
+            StringBuilder sent = new StringBuilder();
             int placeToPaste = -1;
             if (random.nextInt(probability) + 1 == probability) {
                 placeToPaste = random.nextInt(sentenceLength);
