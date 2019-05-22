@@ -7,10 +7,15 @@ import java.util.List;
 
 public class Server {
     static List<ServerThread> list = new LinkedList<>();
-    public static void main(String[] args) throws IOException{
+    public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = new ServerSocket(4004);//Создаем новый serverSocket
-       while (true) {
-           list.add(new ServerThread(serverSocket.accept()));//Добавляем все подключающиеся клиенты в список ServerThread-ов
-       }
+        try {
+            while (true) {
+                list.add(new ServerThread(serverSocket.accept()));//Добавляем все подключающиеся клиенты в список ServerThread-ов
+            }
+        }
+        finally {
+            serverSocket.close();
+        }
     }
 }
