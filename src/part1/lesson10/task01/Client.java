@@ -7,15 +7,21 @@ public class Client {
     static BufferedReader in;
     static BufferedReader reader;//переменная для считывания с клавиатуры
     static BufferedWriter out;
-
-    public static void main(String[] args) throws IOException {
+    static String name;
+    public static void main(String[] args) throws IOException, InterruptedException {
         Socket socket = new Socket("localhost", 4004);
              reader = new BufferedReader(new InputStreamReader(System.in));
              out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
              in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        System.out.println("Введите Ваше имя");
+        name = reader.readLine();
+        out.write(name);
+        out.newLine();
+        out.flush();
+        System.out.println("Чтобы отправить сообщение конкретному пользователю введите '$to'+ имя_пользователя");
              new WriteMsg().start();//Запускаем поток ввода с клавиатуры
              new ReadMsg().start();//Запускаем поток считывание того, что приходит из ServerThread
-
+        Thread.currentThread().join();
         socket.close();
     }
     private static class ReadMsg extends Thread {
@@ -25,7 +31,8 @@ public class Client {
             try {
                 while (true) {
                     str = in.readLine();//Считываем сообщение с ServerThread
-                    if (str.equals("stop")) {
+                    System.out.println(str);
+                    if (str.equals("quit")) {
                         break;
                     }
                 }
@@ -42,7 +49,7 @@ public class Client {
                 String userWord;
                 try {
                     userWord = reader.readLine();//Считываем с клавиатуры
-                    if (userWord.equals("stop"))
+                    if (userWord.equals("quit"))
                     {
                         break;
                     }
