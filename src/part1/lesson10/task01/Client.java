@@ -4,58 +4,60 @@ import java.io.*;
 import java.net.Socket;
 
 public class Client {
-    static BufferedReader in;
-    static BufferedReader reader;//переменная для считывания с клавиатуры
-    static BufferedWriter out;
+    static ObjectInputStream in;
+    static BufferedReader reader;
+    static ObjectOutputStream out;
     static String name;
+
     public static void main(String[] args) throws IOException, InterruptedException {
         Socket socket = new Socket("localhost", 4004);
-             reader = new BufferedReader(new InputStreamReader(System.in));
-             out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Введите Ваше имя");
+        BufferedWriter nameWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
         name = reader.readLine();
-        out.write(name);
-        out.newLine();
-        out.flush();
-        System.out.println("Чтобы отправить сообщение конкретному пользователю введите '$to'+ имя_пользователя");
-             new WriteMsg().start();//Запускаем поток ввода с клавиатуры
-             new ReadMsg().start();//Запускаем поток считывание того, что приходит из ServerThread
+        nameWriter.write(name);
+        nameWriter.newLine();
+        nameWriter.flush();
+        out = new ObjectOutputStream(socket.getOutputStream());
+        in = new ObjectInputStream(socket.getInputStream());
+        System.out.println("Форма отправки сообщений: to all/name: text_message");
+        new WriteMsg().start();
+        new ReadMsg().start();
         Thread.currentThread().join();
         socket.close();
     }
+
     private static class ReadMsg extends Thread {
         @Override
         public void run() {
-            String str;
+            Message message;
             try {
                 while (true) {
-                    str = in.readLine();//Считываем сообщение с ServerThread
-                    System.out.println(str);
-                    if (str.equals("quit")) {
-                        break;
-                    }
+                    message = (Message) in.readObject();
+                    System.out.println(message.from + ": " + message.message);
                 }
             } catch (IOException e) {
 
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
             }
         }
     }
+
     public static class WriteMsg extends Thread {
 
         @Override
         public void run() {
             while (true) {
-                String userWord;
+                String message;
                 try {
-                    userWord = reader.readLine();//Считываем с клавиатуры
-                    if (userWord.equals("quit"))
-                    {
+                    message = reader.readLine();//Считываем с клавиатуры
+                    if (message.equals("exit")) {
                         break;
                     }
-                    out.write(userWord);//Отправляем ServerThread
-                    out.newLine();
-                    out.flush();
+                    String to = message.substring(message.indexOf("to") + 3, message.indexOf(':'));
+                    out.writeObject(new Message(to, name, message.substring(message.indexOf(':') + 1)));
+
                 } catch (IOException e) {
                 }
 

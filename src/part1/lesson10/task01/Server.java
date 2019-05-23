@@ -2,19 +2,26 @@ package part1.lesson10.task01;
 
 import java.io.*;
 import java.net.ServerSocket;
-import java.util.LinkedList;
-import java.util.List;
+import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Server {
-    static List<ServerThread> list = new LinkedList<>();
+    static Map<String, ServerThread> map = new HashMap<>();
+
     public static void main(String[] args) throws IOException {
-        ServerSocket serverSocket = new ServerSocket(4004);//Создаем новый serverSocket
+        ServerSocket serverSocket = new ServerSocket(4004);
         try {
             while (true) {
-                list.add(new ServerThread(serverSocket.accept()));//Добавляем все подключающиеся клиенты в список ServerThread-ов
+                Socket socket = serverSocket.accept();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                String name = reader.readLine();
+                System.out.println(name);
+                ServerThread serverThread = new ServerThread(socket);
+                map.put(name, serverThread);
+                serverThread.start();
             }
-        }
-        finally {
+        } finally {
             serverSocket.close();
         }
     }
