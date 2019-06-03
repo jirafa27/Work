@@ -17,22 +17,28 @@ public class JavaToMySQL {
     private static Statement stmt;
     private static ResultSet rs;
     String query = "";
-
-    public static void main(String args[]) throws SQLException, ClassNotFoundException {
+    private static void initConnection() throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.cj.jdbc.Driver");
         con = DriverManager.getConnection(url, user, password);
         stmt = con.createStatement();
+    }
+    private static void clearDB() throws SQLException {
         stmt.executeUpdate("TRUNCATE TABLE USER");
         stmt.executeUpdate("TRUNCATE TABLE ROLE");
         stmt.executeUpdate("TRUNCATE TABLE USER_ROLE");
+    }
+    private static void insertUsers() throws SQLException {
         stmt.executeUpdate("INSERT INTO USER VALUES (1, 'Alex', '1994-12-24', 1, 'Moskow', '123@mail.ru', '')");
+    }
+    private static void batchInsertUsers() throws SQLException {
         con.setAutoCommit(false);
         stmt.addBatch("INSERT INTO USER VALUES (2, 'Ann', '1995-02-24', 2, 'Spb', '456@mail.ru', '')");
         stmt.addBatch("INSERT INTO USER VALUES (3, 'Dima', '1989-02-24', 3, 'Spb', '457@mail.ru', '')");
         stmt.executeBatch();
         con.commit();
+    }
+    private static void printSelect() throws SQLException {
         rs = stmt.executeQuery("SELECT * FROM USER WHERE `login_ID`=2 or `name`='Alex'");
-        //rs = stmt.executeQuery("SELECT * FROM USER");
         while (rs.next()) {
             int id = rs.getInt(1);
             String name = rs.getString(2);
@@ -43,6 +49,8 @@ public class JavaToMySQL {
             String description = rs.getString(7);
             System.out.printf("id: %d, name: %s, birthday: %s, login_ID: %s, city: %s, email: %s, description: %s %n", id, name, date, login_ID, city, email, description);
         }
+    }
+    private static void trySavepoints() throws SQLException {
         Savepoint savepointOne = null;
         Savepoint savepointTwo = null;
         try {
@@ -66,9 +74,20 @@ public class JavaToMySQL {
             int role_id = rs.getInt(3);
             System.out.printf("id: %d, user_id: %d, role_id: %d %n", id, user_id, role_id);
         }
+    }
+    private static void closing() throws SQLException {
         rs.close();
         con.close();
         stmt.close();
+    }
+    public static void main(String args[]) throws SQLException, ClassNotFoundException {
+        initConnection();
+        clearDB();
+        insertUsers();
+        batchInsertUsers();
+        printSelect();
+        trySavepoints();
+        closing();
 
 
     }
