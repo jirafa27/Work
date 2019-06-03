@@ -91,7 +91,7 @@ public class JavaToMySQL {
     }
     private static final Logger log = Logger.getLogger("reg");
     public static void main(String args[]) throws SQLException, ClassNotFoundException {
-        PropertyConfigurator.configure("src/part1/lesson13/log4j.properties");
+        PropertyConfigurator.configure("src/part1/lesson13/resources/log4j.properties");
 
         initConnection();
         clearDB();
