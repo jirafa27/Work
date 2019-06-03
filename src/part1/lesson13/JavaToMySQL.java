@@ -3,6 +3,9 @@ package part1.lesson13;
 
 import java.sql.*;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+
 public class JavaToMySQL {
     private static final String url = "jdbc:mysql://localhost:3306/database" +
             "?verifyServerCertificate=false" +
@@ -21,14 +24,17 @@ public class JavaToMySQL {
         Class.forName("com.mysql.cj.jdbc.Driver");
         con = DriverManager.getConnection(url, user, password);
         stmt = con.createStatement();
+        log.info("Создание соедиения с базой данных");
     }
     private static void clearDB() throws SQLException {
         stmt.executeUpdate("TRUNCATE TABLE USER");
         stmt.executeUpdate("TRUNCATE TABLE ROLE");
         stmt.executeUpdate("TRUNCATE TABLE USER_ROLE");
+        log.info("Удаление данных из базы");
     }
     private static void insertUsers() throws SQLException {
         stmt.executeUpdate("INSERT INTO USER VALUES (1, 'Alex', '1994-12-24', 1, 'Moskow', '123@mail.ru', '')");
+
     }
     private static void batchInsertUsers() throws SQLException {
         con.setAutoCommit(false);
@@ -36,6 +42,7 @@ public class JavaToMySQL {
         stmt.addBatch("INSERT INTO USER VALUES (3, 'Dima', '1989-02-24', 3, 'Spb', '457@mail.ru', '')");
         stmt.executeBatch();
         con.commit();
+        log.info("Использование batch-процесса");
     }
     private static void printSelect() throws SQLException {
         rs = stmt.executeQuery("SELECT * FROM USER WHERE `login_ID`=2 or `name`='Alex'");
@@ -49,6 +56,7 @@ public class JavaToMySQL {
             String description = rs.getString(7);
             System.out.printf("id: %d, name: %s, birthday: %s, login_ID: %s, city: %s, email: %s, description: %s %n", id, name, date, login_ID, city, email, description);
         }
+        log.info("Вывод параметризованной выборки");
     }
     private static void trySavepoints() throws SQLException {
         Savepoint savepointOne = null;
@@ -64,6 +72,7 @@ public class JavaToMySQL {
             stmt.executeUpdate("INSERT INTO &&&&&&&&USER_ROLE VALUES (2, 2, 2)");
             con.commit();
         } catch (SQLException e) {
+            log.error("Произошел откат к savepointTwo");
             con.rollback(savepointTwo);
 
         }
@@ -80,7 +89,10 @@ public class JavaToMySQL {
         con.close();
         stmt.close();
     }
+    private static final Logger log = Logger.getLogger("reg");
     public static void main(String args[]) throws SQLException, ClassNotFoundException {
+        PropertyConfigurator.configure("src/part1/lesson13/log4j.properties");
+
         initConnection();
         clearDB();
         insertUsers();

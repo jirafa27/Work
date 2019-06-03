@@ -22,3 +22,10 @@ CREATE TABLE `USER_ROLE`
 (id INT NOT NULL PRIMARY KEY,
 user_id  INT NOT NULL,
 role_id INT NOT NULL);
+
+CREATE TABLE `LOGS`
+(id INT NOT NULL PRIMARY KEY auto_increment,
+_date  DATETIME NOT NULL,
+log_level varchar(15) NOT NULL,
+message varchar(255),
+exception varchar(255));
